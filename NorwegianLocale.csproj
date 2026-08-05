@@ -1,0 +1,139 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Configurations>Debug;Release</Configurations>
+		<LangVersion>12.0</LangVersion>
+
+		<!-- The folder where Game.dll is located -->
+		<CustomManagedPath>$(ProgramFiles(x86))\Steam\steamapps\common\Cities Skylines II\Cities2_Data\Managed</CustomManagedPath>
+
+		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
+		<ModPublisherCommand>NewVersion</ModPublisherCommand>
+		<PDXAccountDataPath>$(USERPROFILE)\Documents\Paradox Interactive\pdx_account.txt</PDXAccountDataPath>
+	</PropertyGroup>
+
+	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.props" />
+	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
+
+	<ItemGroup>
+		<Reference Include="Colossal.AssetPipeline">
+			<HintPath>$(CustomManagedPath)\Colossal.AssetPipeline.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Colossal.Localization">
+			<HintPath>$(CustomManagedPath)\Colossal.Localization.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Newtonsoft.Json">
+			<HintPath>$(CustomManagedPath)\Newtonsoft.Json.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Game">
+			<HintPath>$(CustomManagedPath)\Game.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Colossal.Core">
+			<HintPath>$(CustomManagedPath)\Colossal.Core.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Colossal.PSI.Common">
+			<HintPath>$(CustomManagedPath)\Colossal.PSI.Common.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Colossal.Logging">
+			<HintPath>$(CustomManagedPath)\Colossal.Logging.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Colossal.IO.AssetDatabase">
+			<HintPath>$(CustomManagedPath)\Colossal.IO.AssetDatabase.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="UnityEngine.CoreModule">
+			<HintPath>$(CustomManagedPath)\UnityEngine.CoreModule.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Unity.Burst">
+			<HintPath>$(CustomManagedPath)\Unity.Burst.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Unity.Collections">
+			<HintPath>$(CustomManagedPath)\Unity.Collections.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Unity.Entities">
+			<HintPath>$(CustomManagedPath)\Unity.Entities.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Include="Unity.Mathematics">
+			<HintPath>$(CustomManagedPath)\Unity.Mathematics.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Update="System">
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Update="System.Core">
+			<Private>false</Private>
+		</Reference>
+
+		<Reference Update="System.Data">
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="$(ModPropsFile)" Link="Properties\Mod.props" />
+		<None Include="$(ModTargetsFile)" Link="Properties\Mod.targets" />
+	</ItemGroup>
+
+	<Target Name="SetupPublishAttributes" BeforeTargets="BeforeBuild">
+		<XmlPoke
+		  XmlInputPath="$(MSBuildProjectDirectory)\$(PublishConfigurationPath)"
+		  Value="$([System.IO.File]::ReadAllText($(MSBuildProjectDirectory)\LongDescription.md))"
+		  Query="//LongDescription" />
+
+		<XmlPoke
+		  XmlInputPath="$(MSBuildProjectDirectory)\$(PublishConfigurationPath)"
+		  Value="$([System.IO.File]::ReadAllText($(MSBuildProjectDirectory)\ChangeLog.md))"
+		  Query="//ChangeLog" />
+	</Target>
+
+	<ItemGroup>
+		<None Include="Localization/**/*.json" Exclude="Localization/**/*.backup.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+
+		<None Update="i18n.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+
+		<None Update="nb-NO.loc">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+
+		<None Update="nb-NO.loc.cid">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="no.jpg">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>
